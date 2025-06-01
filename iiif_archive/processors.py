@@ -44,7 +44,7 @@ def manifest_factory(manifest: Dict[str, Any]) -> Manifest:
     elif "http://iiif.io/api/presentation/3/context.json" in contexts:
         return Manifest3(manifest)
     else:
-        raise ValueError(f"Unknown manifest version: {manifest["@context"]}")
+        raise ValueError(f"Unknown manifest version: {manifest['@context']}")
 
 class Container(ABC):
     def __init__(self, data: Dict[str, Any]):
