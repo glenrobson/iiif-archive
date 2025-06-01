@@ -1,11 +1,19 @@
 import requests
 import json
 import os
-# from config import Config
+import zipfile
 import logging
 from .processors import manifest_factory, infoJson_factory
 
 logger = logging.getLogger(__name__)
+
+def zip(source_dir, zip_filename):
+    with zipfile.ZipFile(zip_filename, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        for root, _, files in os.walk(source_dir):
+            for file in files:
+                file_path = os.path.join(root, file)
+                arcname = os.path.relpath(file_path, start=source_dir)
+                zipf.write(file_path, arcname)
 
 def saveJson(url, filename):
     # File already exists so return it
@@ -86,6 +94,7 @@ def download(url, zipFileName, scratch="downloads", deleteScratch=True):
     manifest = manifest_factory(manifest_json)
 
     for container in manifest.containers():
+        logger.info(f"Downloading {container.url}")
         if container.isDownloadable():
             downloadAsset(os.path.join(downloadDir, container.filename), container.url)
 
@@ -97,3 +106,7 @@ def download(url, zipFileName, scratch="downloads", deleteScratch=True):
             container.url = container.filename
 
     manifest.save(os.path.join(downloadDir, "manifest.json"))        
+
+    zip(downloadDir, zipFileName)
+
+    return zipFileName

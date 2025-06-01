@@ -12,4 +12,6 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     #Config.load(args.conf)
-    downloader.download(args.manifest, args.zip_file_name)
+    filename = downloader.download(args.manifest, args.zip_file_name)
+
+    print (f"Created {filename}")
