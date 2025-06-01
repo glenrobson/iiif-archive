@@ -1,5 +1,3 @@
-
-import argparse
 import requests
 import json
 import os

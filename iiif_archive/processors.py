@@ -59,13 +59,13 @@ class Container(ABC):
     @property
     @abstractmethod
     def url(self) -> str:
-        """The URL of the asset or IIIF image Id"""
+        """The URL of the asset or IIIF image Id."""
         pass
 
     @url.setter
     @abstractmethod
     def url(self, value) -> str:
-        """Set the URL of the asset or IIIF image Id"""
+        """Set the URL of the asset or IIIF image Id."""
         pass
 
     @property
