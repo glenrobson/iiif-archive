@@ -16,6 +16,18 @@ REQUIREMENTS = [
     "requests >=2.28.0, <3.0.0"
 ]
 
+DOCS_REQUIREMENTS = [
+]
+
+DEV_REQUIREMENTS = [
+    "autopep8 >=1.6.0, <3.0.0",
+    "isort >=5.10.1, <6.0.0",
+    "flake8 >=7.2.0, <8.0.0",
+    "flake8-docstrings >=1.6.0, <2.0.0",
+    "flake8-isort >=4.1.1, <7.0.0",
+    "tox >=3.25.0, <5.0.0"
+]
+
 # Setting up
 setup(
     name="iiif-archive",
@@ -43,5 +55,9 @@ setup(
     python_requires='>=3',
     url='https://github.com/glenrobson/iiif-archive',
     license='MIT License',
-    install_requires=REQUIREMENTS
+    install_requires=REQUIREMENTS,
+    extras_require={
+        "docs": DOCS_REQUIREMENTS,
+        "dev": DEV_REQUIREMENTS,
+    },
 )
