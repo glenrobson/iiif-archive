@@ -3,7 +3,6 @@ import os
 import unittest
 from unittest.mock import patch
 import json
-import requests
 import tempfile
 from iiif_archive.downloader import download
 from utils import mockResponse, MockAssetResponse
