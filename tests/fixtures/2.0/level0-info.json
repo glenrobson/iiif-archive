@@ -1,0 +1,48 @@
+{
+    "tiles": [
+        {
+            "scaleFactors": [
+                32,
+                16,
+                8,
+                4,
+                2,
+                1
+            ],
+            "width": 1024,
+            "height": 1024
+        }
+    ],
+    "protocol": "http://iiif.io/api/image",
+    "sizes": [
+        {
+            "width": 119,
+            "height": 163
+        },
+        {
+            "width": 238,
+            "height": 326
+        },
+        {
+            "width": 475,
+            "height": 651
+        },
+        {
+            "width": 949,
+            "height": 1302
+        },
+        {
+            "width": 1897,
+            "height": 2604
+        },
+        {
+            "width": 3794,
+            "height": 5207
+        }
+    ],
+    "profile": "http://iiif.io/api/image/2/level0.json",
+    "width": 3794,
+    "@id": "https://iiif-test.github.io/March2025/images/asna_1",
+    "@context": "http://iiif.io/api/image/2/context.json",
+    "height": 5207
+}

@@ -3,7 +3,7 @@ import json
 import os
 # from config import Config
 import logging
-from .processors import manifest_factory
+from .processors import manifest_factory, infoJson_factory
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +41,18 @@ def downloadAsset(filename, url):
 
     return filename
 
+def downloadIIIF(imageDir, url):
+    os.makedirs(imageDir, exist_ok=True)
+    # Download info.json
+    infoJson = infoJson_factory(saveJson(f"{url}/info.json", os.path.join(imageDir, "info.json")))
+
+    urls = infoJson.tileUrls()
+    for url in urls:
+        filename = url.replace(infoJson.id, imageDir)
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
+
+        downloadAsset(filename, url)
+
 def download(url, zipFileName, scratch="downloads", deleteScratch=True):
     """Downloads and processes a IIIF manifest from the given URL and stores the result in a zip file.
 
@@ -73,10 +85,14 @@ def download(url, zipFileName, scratch="downloads", deleteScratch=True):
     manifest_json = saveJson(url, os.path.join(downloadDir, "manifest.json"))
     manifest = manifest_factory(manifest_json)
 
-
     for container in manifest.containers():
         if container.isDownloadable():
             downloadAsset(os.path.join(downloadDir, container.filename), container.url)
+
+            container.url = container.filename
+        else:
+            # Content is a IIIF Image 
+            downloadIIIF(os.path.join(downloadDir, container.filename), container.url)    
 
             container.url = container.filename
 
