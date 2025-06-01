@@ -22,7 +22,10 @@ class InfoJson(ABC):
     def tileUrls(self):
         tiles = self.data["tiles"][0]
         tileWidth = tiles["width"]
-        tileHeight = tiles["height"]
+        if "height" in tiles:
+            tileHeight = tiles["height"]
+        else:
+            tileHeight = tileWidth
 
         urls = []
         # structure is the same for both versions
