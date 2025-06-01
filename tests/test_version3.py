@@ -85,7 +85,6 @@ class TestVersion3(unittest.TestCase):
 
     @patch("requests.get")
     def test_iiif_image(self, mockRequest):
-        requested_urls = []
         # Define mock response for the specific URLs
         def mock_response(url, *args, **kwargs):
             if "manifest.json" in url:
