@@ -30,6 +30,11 @@ python deflate.py -zip-file-name simple_image3 https://iiif.io/api/cookbook/reci
 ```
 python -m unittest discover -s tests
 ```
+Run a single test:
+
+```
+python -m unittest tests.test_version3.TestVersion3.test_iiif_image
+```
 
 ## Test fixtures
 
