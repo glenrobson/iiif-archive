@@ -3,6 +3,7 @@ import json
 import os
 import zipfile
 import logging
+import time
 from .processors import manifest_factory, infoJson_factory
 
 logger = logging.getLogger(__name__)
@@ -36,16 +37,26 @@ def saveJson(url, filename):
 
         return data    
 
-def downloadAsset(filename, url):
+def downloadAsset(filename, url, retries=3, delay=1):
     if os.path.exists(filename):
         logger.info(f"Found {url} already present in {filename}.")
     else:
-        with requests.get(url, stream=True) as response:
-            response.raise_for_status()  # Raises error for bad status
-            with open(filename, "wb") as f:
-                for chunk in response.iter_content(chunk_size=8192):
-                    if chunk:  # filter out keep-alive chunks
-                        f.write(chunk)
+        for attempt in range(1, retries + 1):
+            try:
+                with requests.get(url, stream=True) as response:
+                    response.raise_for_status()  # Raises error for bad status
+                    with open(filename, "wb") as f:
+                        for chunk in response.iter_content(chunk_size=8192):
+                            if chunk:  # filter out keep-alive chunks
+                                f.write(chunk)
+                return filename
+            except requests.exceptions.HTTPError as e:
+                if response.status_code == 502:
+                    print(f"Attempt {attempt} failed with 502 Bad Gateway.")
+                    if attempt < retries:
+                        time.sleep(delay)
+                        continue
+                raise  # Re-raise if not 502 or retries exhausted
 
     return filename
 
