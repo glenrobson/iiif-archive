@@ -1,10 +1,21 @@
 from abc import ABC, abstractmethod
 from typing import Dict, Any
 import math
+import json
 
 class InfoJson(ABC):
     def __init__(self, data: Dict[str, Any]):
         self.data = data
+
+    @property    
+    @abstractmethod
+    def id(self) -> str:
+        pass
+
+    @id.setter
+    @abstractmethod
+    def id(self, value) -> str:
+        pass
 
     @property
     def width(self) -> int:
@@ -13,11 +24,6 @@ class InfoJson(ABC):
     @property
     def height(self) -> int:
         return self.data["height"]    
-
-    @property    
-    @abstractmethod
-    def id(self) -> str:
-        pass
 
     def tileUrls(self):
         tiles = self.data["tiles"][0]
@@ -70,10 +76,20 @@ class InfoJson(ABC):
     def buildImage(self, region="full", sizeWidth=0, sizeHeight=0, rotation=0, quality="default", format="jpg"):
         pass
 
+    def save(self, filename):
+        with open(filename, "w") as f:
+            json.dump(self.data, f, indent=4)
+
+        return self.data
+
 class InfoJson2(InfoJson):    
     @property
     def id(self):
         return self.data['@id']
+
+    @id.setter
+    def id(self, value) -> str:
+        self.data['@id'] = value
 
     def buildImage(self, region="full", sizeWidth=0, sizeHeight=0, rotation=0, quality="default", format="jpg"):
         return f"{self.data['@id']}/{region}/{sizeWidth},/{rotation}/{quality}.{format}"
@@ -83,6 +99,10 @@ class InfoJson3(InfoJson):
     def id(self):
         return self.data['id']
 
+    @id.setter
+    def id(self, value) -> str:
+        self.data['@id'] = value
+        
     def buildImage(self, region="full", sizeWidth=0, sizeHeight=0, rotation=0, quality="default", format="jpg"):
         return f"{self.data['id']}/{region}/{sizeWidth},{sizeHeight}/{rotation}/{quality}.{format}"
     

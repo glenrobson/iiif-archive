@@ -8,6 +8,16 @@ class Manifest(ABC):
     def __init__(self, data: Dict[str, Any]):
         self.data = data
 
+    @property    
+    @abstractmethod
+    def id(self) -> str:
+        pass
+
+    @id.setter
+    @abstractmethod
+    def id(self, value) -> str:
+        pass
+
     @abstractmethod
     def containers(self):
         pass
@@ -19,6 +29,14 @@ class Manifest(ABC):
         return self.data
 
 class Manifest2(Manifest):
+    @property    
+    def id(self) -> str:
+        return self.data["@id"]
+
+    @id.setter
+    def id(self, value) -> str:
+        self.data["@id"] = value
+
     def containers(self):
         canvases = []
         for sequence in self.data["sequences"]:    
@@ -28,6 +46,14 @@ class Manifest2(Manifest):
         return  canvases
 
 class Manifest3(Manifest):
+    @property    
+    def id(self) -> str:
+        return self.data["id"]
+
+    @id.setter
+    def id(self, value) -> str:
+        self.data["id"] = value
+
     def containers(self):
         canvases = []
         for canvas in self.data["items"]: 
