@@ -56,7 +56,7 @@ def downloadAsset(filename, url, retries=3, delay=1):
                     if attempt < retries:
                         time.sleep(delay)
                         continue
-                raise  # Re-raise if not 502 or retries exhausted
+                raise e # Re-raise if not 502 or retries exhausted
 
     return filename
 
