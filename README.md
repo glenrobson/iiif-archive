@@ -2,6 +2,7 @@
 Creates a backup of a IIIF Manifest with images
 
 ## Download manifest and create zip:
+To create a zip file of a manifest you can run deflate:
 
 ```
 python deflate.py -h
@@ -23,7 +24,28 @@ Example:
 ```
 python deflate.py -zip-file-name simple_image3 https://iiif.io/api/cookbook/recipe/0001-mvm-image/manifest.json
 ```
+To turn this zip file into a directory of files that you can host on a web server you can use inflate:
 
+```
+python inflate.py -h 
+usage: inflate.py [-h] zip_file local_dir base_url
+
+Export a zipped Manifest so it can be served at a specified URL
+
+positional arguments:
+  zip_file    zip_file to inflate
+  local_dir   directory to inflate zip file to
+  base_url    base URL that the manifest will be served at
+
+options:
+  -h, --help  show this help message and exit
+```
+
+Example:
+
+```
+python inflate.py ScottishClans.zip  iiif_stuff/ https://glenrobson.github.io/iiif_stuff/
+```
 
 ## Running tests
 
