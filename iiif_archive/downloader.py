@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 def zip(source_dir, zip_filename):
     with zipfile.ZipFile(zip_filename, 'w', zipfile.ZIP_DEFLATED) as zipf:
-        for root, _, files in os.walk(source_dir):
+        for root, dirs, files in os.walk(source_dir):
             for file in files:
                 file_path = os.path.join(root, file)
                 arcname = os.path.relpath(file_path, start=source_dir)
