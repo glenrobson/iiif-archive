@@ -1,0 +1,33 @@
+[flake8]
+exclude =
+	.tox,
+	build,
+	dist,
+	docs,
+	iiif_prezi3/skeleton.py, # file is automatically generated
+        .venv
+application-import-names = flake8
+docstring-convention = google
+import-order-style = pep8
+max-complexity = 10
+ignore =
+ 	# Missing docstring in public module
+	D100
+	# Missing docstring in public class
+	D101
+	# Missing docstring in public method
+	D102
+	# Missing docstring in public function
+	D103
+	# Missing docstring in public package
+	D104
+	# Missing docstring in magic method
+	D105
+	# Missing docstring in public nested class
+	D106
+	# Missing docstring in __init__
+	D107
+	# Line too long
+	E501
+	# syntax error in forward annotation
+	F722
