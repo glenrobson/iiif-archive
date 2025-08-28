@@ -1,14 +1,15 @@
-from abc import ABC, abstractmethod
-from typing import Dict, Any
 import json
+from abc import ABC, abstractmethod
+from typing import Any, Dict
 
-from iiif_archive.models.container import Canvas3, Canvas2
+from iiif_archive.models.container import Canvas2, Canvas3
+
 
 class Manifest(ABC):
     def __init__(self, data: Dict[str, Any]):
         self.data = data
 
-    @property    
+    @property
     @abstractmethod
     def id(self) -> str:
         pass
@@ -28,8 +29,9 @@ class Manifest(ABC):
 
         return self.data
 
+
 class Manifest2(Manifest):
-    @property    
+    @property
     def id(self) -> str:
         return self.data["@id"]
 
@@ -39,14 +41,15 @@ class Manifest2(Manifest):
 
     def containers(self):
         canvases = []
-        for sequence in self.data["sequences"]:    
+        for sequence in self.data["sequences"]:
             for canvas in sequence["canvases"]:
                 canvases.append(Canvas2(canvas))
 
-        return  canvases
+        return canvases
+
 
 class Manifest3(Manifest):
-    @property    
+    @property
     def id(self) -> str:
         return self.data["id"]
 
@@ -56,7 +59,6 @@ class Manifest3(Manifest):
 
     def containers(self):
         canvases = []
-        for canvas in self.data["items"]: 
+        for canvas in self.data["items"]:
             canvases.append(Canvas3(canvas))
         return canvases
-

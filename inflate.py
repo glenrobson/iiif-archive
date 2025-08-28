@@ -1,6 +1,7 @@
-from iiif_archive import decompressor
-import logging
 import argparse
+import logging
+
+from iiif_archive import decompressor
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
@@ -13,4 +14,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
     dir = decompressor.inflate(args.zip_file, args.local_dir, args.base_url)
 
-    print (f"Inflated to: {dir}")
+    print(f"Inflated to: {dir}")

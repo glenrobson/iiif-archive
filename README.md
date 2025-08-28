@@ -5,8 +5,7 @@ Creates a backup of a IIIF Manifest with images
 To create a zip file of a manifest you can run deflate:
 
 ```
-python deflate.py -h
-usage: deflate.py [-h] [--zip-file-name ZIP_FILE_NAME] [--conf CONF] manifest
+usage: deflate.py [-h] [--zip-file-name ZIP_FILE_NAME] [--conf CONF] [--delay DELAY] [--retry-delay RETRY_DELAY] manifest
 
 Download a Manifest and store the results in a zip file
 
@@ -17,7 +16,10 @@ options:
   -h, --help            show this help message and exit
   --zip-file-name ZIP_FILE_NAME
                         Name of the zip file (default: manifest.zip)
-  --conf CONF           Config file
+  --conf CONF           Config file. Default: conf/config.ini
+  --delay DELAY         Delay between image requests in seconds. Use 0 for no delay. Default: 1 second.
+  --retry-delay RETRY_DELAY
+                        Delay between image requests after getting a 503 from the first attempt (in seconds). Use 0 for no delay. Default: 1 second.
 ```
 
 Example:

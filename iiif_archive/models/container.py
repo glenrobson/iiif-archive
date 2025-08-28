@@ -1,6 +1,7 @@
-from abc import ABC, abstractmethod
-from typing import Dict, Any
 import os
+from abc import ABC, abstractmethod
+from typing import Any, Dict
+
 
 class Container(ABC):
     def __init__(self, data: Dict[str, Any]):
@@ -10,7 +11,7 @@ class Container(ABC):
     @abstractmethod
     def id(self) -> str:
         """Abstract property that must be implemented."""
-        pass    
+        pass
 
     @property
     @abstractmethod
@@ -34,7 +35,7 @@ class Container(ABC):
         pass
 
 
-class Canvas2(Container):    
+class Canvas2(Container):
     def __init__(self, data: Dict[str, Any]):
         self.data = data
 
@@ -46,14 +47,14 @@ class Canvas2(Container):
     def url(self) -> str:
         if self.isDownloadable():
             return self.data["images"][0]["resource"]["@id"]
-        else: 
+        else:
             return self.data["images"][0]["resource"]["service"]["@id"]
 
     @url.setter
     def url(self, value) -> str:
         if self.isDownloadable():
             self.data["images"][0]["resource"]["@id"] = value
-        else: 
+        else:
             self.data["images"][0]["resource"]["service"]["@id"] = value
 
     @property
@@ -65,11 +66,11 @@ class Canvas2(Container):
             raise NotImplementedError("iiif-archive doesn't support composite images")
 
         imageResource = self.data["images"][0]["resource"]
-            
-        return "service" not in imageResource    
+
+        return "service" not in imageResource
 
 
-class Canvas3(Container):    
+class Canvas3(Container):
     def __init__(self, data: Dict[str, Any]):
         self.data = data
 
@@ -81,7 +82,7 @@ class Canvas3(Container):
     def url(self) -> str:
         if self.isDownloadable():
             return self.data["items"][0]["items"][0]["body"]["id"]
-        else: 
+        else:
             service = self.data["items"][0]["items"][0]["body"]["service"][0]
             imgId = ""
             if "@id" in service:
@@ -96,14 +97,13 @@ class Canvas3(Container):
     def url(self, value) -> str:
         if self.isDownloadable():
             self.data["items"][0]["items"][0]["body"]["id"] = value
-        else: 
+        else:
             service = self.data["items"][0]["items"][0]["body"]["service"][0]
             if "@id" in service:
                 # In case v3 manifest is linking to a v2 image
                 service["@id"] = value
             else:
                 service["id"] = value
-
 
     def isDownloadable(self) -> bool:
         if len(self.data["items"]) > 1:
@@ -113,10 +113,9 @@ class Canvas3(Container):
             raise NotImplementedError("iiif-archive doesn't support composite images")
 
         imageResource = self.data["items"][0]["items"][0]["body"]
-            
-        return "service" not in imageResource 
+
+        return "service" not in imageResource
 
     @property
     def filename(self) -> str:
         return os.path.basename(self.url)
-        

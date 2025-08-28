@@ -1,21 +1,24 @@
+import json
 import os
-
+import tempfile
 import unittest
 from unittest.mock import patch
-import json
-import tempfile
+
+from iiif_archive.config import load_config
 from iiif_archive.downloader import download
 from iiif_archive.processors import infoJson_factory
-from tests.utils import mockResponse, MockAssetResponse
+from tests.utils import MockAssetResponse, mockResponse
+
 
 class TestVersion2(unittest.TestCase):
     def setUp(self) -> None:
         # Set up config
         self.temp_dir = tempfile.TemporaryDirectory()
         self.test_path = self.temp_dir.name
+        load_config("tests/test-config.ini")
 
     def tearDown(self):
-        return self.temp_dir.cleanup();    
+        return self.temp_dir.cleanup()
 
     @patch("requests.get")
     def test_simple_image(self, mockRequest):
@@ -26,9 +29,9 @@ class TestVersion2(unittest.TestCase):
             else:
                 return MockAssetResponse("tests/fixtures/assets/image.png")
 
-        mockRequest.side_effect = mock_response    
+        mockRequest.side_effect = mock_response
 
-        download("https://glenrobson.github.io/iiif_stuff/simple_images/manifest2.json", "simple_image2.zip", scratch=self.test_path, deleteScratch=False)
+        download("https://glenrobson.github.io/iiif_stuff/simple_images/manifest2.json", "simple_image2.zip", self.test_path, deleteScratch=False)
 
         self.assertTrue(os.path.exists(os.path.join(self.test_path, "simple_image2", "manifest.json")), "Expected to find manifest")
         self.assertTrue(os.path.exists(os.path.join(self.test_path, "simple_image2", "gottingen.jpg")), "Expected to find linked image")
@@ -97,6 +100,20 @@ class TestVersion2(unittest.TestCase):
             self.assertTrue("https://iiif-test.github.io/March2025/images/asna_1/3072,3072,722,1024/722,/0/default.jpg" in urls)
             self.assertTrue("https://iiif-test.github.io/March2025/images/asna_1/3072,4096,722,1024/722,/0/default.jpg" in urls)
             self.assertTrue("https://iiif-test.github.io/March2025/images/asna_1/3072,5120,722,87/722,/0/default.jpg" in urls)
+
+    def test_level0(self):
+        with open("tests/fixtures/2.0/level0-info.json", "r") as f:
+            data = json.load(f)
+            infoJson = infoJson_factory(data)
+
+            self.assertTrue(infoJson.isLevel0(), "Expected to find level 0 image")
+
+        with open("tests/fixtures/2.0/gottingen-info.json", "r") as f:
+            data = json.load(f)
+            infoJson = infoJson_factory(data)
+
+            self.assertFalse(infoJson.isLevel0(), "Image is not a level 0 image")
+
 
 if __name__ == "__main__":
     unittest.main()

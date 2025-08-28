@@ -1,9 +1,10 @@
-import zipfile
-import os
 import json
+import os
+import zipfile
 from pathlib import Path
 
-from iiif_archive.processors import manifest_factory, infoJson_factory
+from iiif_archive.processors import infoJson_factory, manifest_factory
+
 
 def unzip_file(zip_path, extract_to):
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
@@ -16,7 +17,7 @@ def inflate(zip_file, local_dir, base_url):
 
     base_url = base_url + "/" + zip_file.replace(".zip", "")
 
-    with open(os.path.join(baseDir,"manifest.json"), "r") as f:
+    with open(os.path.join(baseDir, "manifest.json"), "r") as f:
         manifest = manifest_factory(json.load(f))
 
         manifest.id = f"{base_url}/manifest.json"
@@ -30,11 +31,11 @@ def inflate(zip_file, local_dir, base_url):
 
     for subdir in baseDirPath.iterdir():
         if subdir.is_dir():
-            with open(os.path.join(baseDir, subdir ,"info.json"), "r") as f:
+            with open(os.path.join(baseDir, subdir, "info.json"), "r") as f:
                 infoJson = infoJson_factory(json.load(f))
 
                 infoJson.id = f"{base_url}/{os.path.basename(subdir)}"
 
-                infoJson.save(os.path.join(baseDir, subdir ,"info.json"))
-            
+                infoJson.save(os.path.join(baseDir, subdir, "info.json"))
+
     return baseDir
