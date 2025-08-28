@@ -40,7 +40,7 @@ def load_config(path: Optional[str] = None, overrides: Optional[Dict[str, Any]]=
         scratch_dir = overrides.get("scratch_dir", scratch_dir)
         delay = overrides.get("delay", delay)
         retry_delay = overrides.get("retry_delay", retry_delay)
-        no_delay_level0 = overrides.get("retry_delay", no_delay_level0)
+        no_delay_level0 = overrides.get("no_delay_level0", no_delay_level0)
 
     Singleton._instance = Config(
         scratch_dir=scratch_dir,

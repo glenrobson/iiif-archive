@@ -28,9 +28,7 @@ class TestConfig(unittest.TestCase):
         self.assertEqual(config.delay, 2, "Setting from command line should be 2")
 
     def test_emptycmdline(self):
-        params = {
-            "delay": None
-        }
+        params = {}
         config = load_config("tests/test-config.ini", params)
 
         self.assertEqual(config.delay, 0, "Setting should be from provided properties file and equal to 0")   

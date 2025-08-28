@@ -17,10 +17,14 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    params = {
-        "delay": args.delay,
-        "retry_delay": args.retry_delay
-    }
+    params = {}
+    if args.delay:
+        params["delay"] = args.delay
+
+    if args.retry_delay:    
+        params["retry_delay"] = args.retry_delay
+
+    print (params)
 
     config = load_config(args.conf, params)
 
