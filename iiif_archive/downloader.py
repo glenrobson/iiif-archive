@@ -81,7 +81,7 @@ def downloadIIIF(imageDir, url):
         except requests.exceptions.HTTPError as e:    
             print(f"Failed to get {url} skipping.")
 
-def download(url, zipFileName, scratch="downloads", deleteScratch=True):
+def download(url, zipFileName, scratch, deleteScratch=True):
     """Downloads and processes a IIIF manifest from the given URL and stores the result in a zip file.
 
     Args:

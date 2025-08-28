@@ -31,7 +31,7 @@ class TestVersion3(unittest.TestCase):
 
         mockRequest.side_effect = mock_response    
 
-        download("https://iiif.io/api/cookbook/recipe/0001-mvm-image/manifest.json", "simple_image3.zip", scratch=self.test_path, deleteScratch=False)
+        download("https://iiif.io/api/cookbook/recipe/0001-mvm-image/manifest.json", "simple_image3.zip", self.test_path, deleteScratch=False)
 
         self.assertTrue(os.path.exists(os.path.join(self.test_path, "simple_image3", "manifest.json")), "Expected to find manifest")
         self.assertTrue(os.path.exists(os.path.join(self.test_path, "simple_image3", "page1-full.png")), "Expected to find linked image")
@@ -53,7 +53,7 @@ class TestVersion3(unittest.TestCase):
         mockRequest.side_effect = mock_response    
 
         dir = "simple_audio"
-        download("https://iiif.io/api/cookbook/recipe/0002-mvm-audio/manifest.json", f"{dir}.zip", scratch=self.test_path, deleteScratch=False)
+        download("https://iiif.io/api/cookbook/recipe/0002-mvm-audio/manifest.json", f"{dir}.zip", self.test_path, deleteScratch=False)
 
         self.assertTrue(os.path.exists(os.path.join(self.test_path, dir, "manifest.json")), "Expected to find manifest")
         self.assertTrue(os.path.exists(os.path.join(self.test_path, dir, "128Kbps.mp4")), "Expected to find linked audio")
@@ -75,7 +75,7 @@ class TestVersion3(unittest.TestCase):
         mockRequest.side_effect = mock_response    
 
         dir = "simple_video"
-        download("https://iiif.io/api/cookbook/recipe/0003-mvm-video/manifest.json", f"{dir}.zip", scratch=self.test_path, deleteScratch=False)
+        download("https://iiif.io/api/cookbook/recipe/0003-mvm-video/manifest.json", f"{dir}.zip", self.test_path, deleteScratch=False)
 
         self.assertTrue(os.path.exists(os.path.join(self.test_path, dir, "manifest.json")), "Expected to find manifest")
         self.assertTrue(os.path.exists(os.path.join(self.test_path, dir, "lunchroom_manners_1024kb.mp4")), "Expected to find linked video")
@@ -100,7 +100,7 @@ class TestVersion3(unittest.TestCase):
         mockRequest.side_effect = mock_response    
 
         dir = "iiif_image3"
-        download("https://iiif.io/api/cookbook/recipe/0005-image-service/manifest.json", f"{dir}.zip", scratch=self.test_path, deleteScratch=False)
+        download("https://iiif.io/api/cookbook/recipe/0005-image-service/manifest.json", f"{dir}.zip", self.test_path, deleteScratch=False)
 
         self.assertTrue(os.path.exists(os.path.join(self.test_path, dir, "manifest.json")), "Expected to find manifest")
         imageDir = os.path.join(self.test_path, dir, "918ecd18c2592080851777620de9bcb5-gottingen")

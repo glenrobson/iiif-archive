@@ -22,8 +22,8 @@ if __name__ == "__main__":
         "retry_delay": args.retry_delay
     }
 
-    load_config(args.conf, params)
+    config = load_config(args.conf, params)
 
-    filename = downloader.download(args.manifest, args.zip_file_name)
+    filename = downloader.download(args.manifest, args.zip_file_name, config.scratch_dir)
 
     print (f"Created {filename}")

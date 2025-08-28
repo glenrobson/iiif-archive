@@ -30,7 +30,7 @@ class TestVersion2(unittest.TestCase):
 
         mockRequest.side_effect = mock_response    
 
-        download("https://glenrobson.github.io/iiif_stuff/simple_images/manifest2.json", "simple_image2.zip", scratch=self.test_path, deleteScratch=False)
+        download("https://glenrobson.github.io/iiif_stuff/simple_images/manifest2.json", "simple_image2.zip", self.test_path, deleteScratch=False)
 
         self.assertTrue(os.path.exists(os.path.join(self.test_path, "simple_image2", "manifest.json")), "Expected to find manifest")
         self.assertTrue(os.path.exists(os.path.join(self.test_path, "simple_image2", "gottingen.jpg")), "Expected to find linked image")
