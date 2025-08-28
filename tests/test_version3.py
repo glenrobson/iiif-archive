@@ -7,12 +7,14 @@ import tempfile
 from iiif_archive.downloader import download
 from iiif_archive.processors import infoJson_factory
 from tests.utils import mockResponse, MockAssetResponse
+from iiif_archive.config import get_config, load_config
 
 class TestVersion3(unittest.TestCase):
     def setUp(self) -> None:
         # Set up config
         self.temp_dir = tempfile.TemporaryDirectory()
         self.test_path = self.temp_dir.name
+        config = load_config("tests/test-config.ini")
 
     def tearDown(self):
         return self.temp_dir.cleanup();    
@@ -162,5 +164,17 @@ class TestVersion3(unittest.TestCase):
             self.assertTrue("https://iiif-test.github.io/actions_test/images/IMG_5954/3072,1024,960,1024/960,1024/0/default.jpg" in urls)
             self.assertTrue("https://iiif-test.github.io/actions_test/images/IMG_5954/3072,2048,960,976/960,976/0/default.jpg" in urls)
 
+    def test_level0(self):
+        with open("tests/fixtures/3.0/level0-info.json", "r") as f:
+            data = json.load(f)
+            infoJson = infoJson_factory(data)
+
+            self.assertTrue(infoJson.isLevel0(), "Expected to find level 0 image")
+
+        with open("tests/fixtures/3.0/gottingen-info.json", "r") as f:
+            data = json.load(f)
+            infoJson = infoJson_factory(data)
+
+            self.assertFalse(infoJson.isLevel0(), "Image is not a level 0 image")
 if __name__ == "__main__":
     unittest.main()

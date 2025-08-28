@@ -25,6 +25,10 @@ class InfoJson(ABC):
     def height(self) -> int:
         return self.data["height"]    
 
+    @abstractmethod
+    def isLevel0(self) -> bool:
+        pass
+
     def tileUrls(self):
         tiles = self.data["tiles"][0]
         tileWidth = tiles["width"]
@@ -94,6 +98,16 @@ class InfoJson2(InfoJson):
     def buildImage(self, region="full", sizeWidth=0, sizeHeight=0, rotation=0, quality="default", format="jpg"):
         return f"{self.data['@id']}/{region}/{sizeWidth},/{rotation}/{quality}.{format}"
 
+    def isLevel0(self) -> bool:
+        profile = self.data["profile"]
+        level0_uri = "http://iiif.io/api/image/2/level0.json"
+        if isinstance(profile,str):
+            return profile == level0_uri
+        elif isinstance(profile, list):
+            return level0_uri in profile
+        else:    
+            raise TypeError(f"Expected a string or a list for profile in the infoJson, but got {type(profile).__name__}")
+
 class InfoJson3(InfoJson):    
     @property
     def id(self):
@@ -106,3 +120,5 @@ class InfoJson3(InfoJson):
     def buildImage(self, region="full", sizeWidth=0, sizeHeight=0, rotation=0, quality="default", format="jpg"):
         return f"{self.data['id']}/{region}/{sizeWidth},{sizeHeight}/{rotation}/{quality}.{format}"
     
+    def isLevel0(self) -> bool:
+        return self.data['profile'] == "level0"

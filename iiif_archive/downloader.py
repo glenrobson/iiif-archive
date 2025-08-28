@@ -6,6 +6,8 @@ import logging
 import time
 from .processors import manifest_factory, infoJson_factory
 
+from iiif_archive.config import get_config
+
 logger = logging.getLogger(__name__)
 
 def zip(source_dir, zip_filename):
@@ -37,7 +39,8 @@ def saveJson(url, filename):
 
         return data    
 
-def downloadAsset(filename, url, retries=3, delay=1):
+def downloadAsset(filename, url, retries=3):
+    config = get_config()
     if os.path.exists(filename):
         logger.info(f"Found {url} already present in {filename}.")
     else:
@@ -49,12 +52,15 @@ def downloadAsset(filename, url, retries=3, delay=1):
                         for chunk in response.iter_content(chunk_size=8192):
                             if chunk:  # filter out keep-alive chunks
                                 f.write(chunk)
+
+                time.sleep(config.delay)                
+
                 return filename
             except requests.exceptions.HTTPError as e:
                 if response.status_code == 502:
-                    print(f"Attempt {attempt} failed with 502 Bad Gateway.")
+                    logger.info(f"Attempt {attempt} failed with 502 Bad Gateway.")
                     if attempt < retries:
-                        time.sleep(delay)
+                        time.sleep(config.retry_delay)
                         continue
                 raise e # Re-raise if not 502 or retries exhausted
 
@@ -70,7 +76,10 @@ def downloadIIIF(imageDir, url):
         filename = url.replace(infoJson.id, imageDir)
         os.makedirs(os.path.dirname(filename), exist_ok=True)
 
-        downloadAsset(filename, url)
+        try:
+            downloadAsset(filename, url)
+        except requests.exceptions.HTTPError as e:    
+            print(f"Failed to get {url} skipping.")
 
 def download(url, zipFileName, scratch="downloads", deleteScratch=True):
     """Downloads and processes a IIIF manifest from the given URL and stores the result in a zip file.
