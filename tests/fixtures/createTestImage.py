@@ -1,6 +1,6 @@
 from PIL import Image
 
-filename="tests/fixtures/assets/image.png"
+filename = "tests/fixtures/assets/image.png"
 
 # Image settings
 width, height = 100, 100

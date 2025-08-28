@@ -1,13 +1,14 @@
-from abc import ABC, abstractmethod
-from typing import Dict, Any
-import math
 import json
+import math
+from abc import ABC, abstractmethod
+from typing import Any, Dict
+
 
 class InfoJson(ABC):
     def __init__(self, data: Dict[str, Any]):
         self.data = data
 
-    @property    
+    @property
     @abstractmethod
     def id(self) -> str:
         pass
@@ -19,11 +20,11 @@ class InfoJson(ABC):
 
     @property
     def width(self) -> int:
-        return self.data["width"]    
+        return self.data["width"]
 
     @property
     def height(self) -> int:
-        return self.data["height"]    
+        return self.data["height"]
 
     @abstractmethod
     def isLevel0(self) -> bool:
@@ -42,7 +43,7 @@ class InfoJson(ABC):
         for scaleFactor in tiles["scaleFactors"]:
             urls += self.scaleTiles(scaleFactor, tileWidth, tileHeight)
 
-        return urls    
+        return urls
 
     def scaleTiles(self, scaleFactor, tileWidth, tileHeight):
         urls = []
@@ -66,7 +67,7 @@ class InfoJson(ABC):
                     if left + width > self.width:
                         width = self.width - left
 
-                    top = y * scaledTileHeight    
+                    top = y * scaledTileHeight
                     height = scaledTileHeight
                     if top + height > self.height:
                         height = self.height - top
@@ -74,7 +75,7 @@ class InfoJson(ABC):
                     region = f"{left},{top},{width},{height}"
                     urls.append(self.buildImage(region=region, sizeWidth=math.ceil(width / scaleFactor), sizeHeight=math.ceil(height / scaleFactor)))
 
-        return urls    
+        return urls
 
     @abstractmethod
     def buildImage(self, region="full", sizeWidth=0, sizeHeight=0, rotation=0, quality="default", format="jpg"):
@@ -86,7 +87,8 @@ class InfoJson(ABC):
 
         return self.data
 
-class InfoJson2(InfoJson):    
+
+class InfoJson2(InfoJson):
     @property
     def id(self):
         return self.data['@id']
@@ -101,14 +103,15 @@ class InfoJson2(InfoJson):
     def isLevel0(self) -> bool:
         profile = self.data["profile"]
         level0_uri = "http://iiif.io/api/image/2/level0.json"
-        if isinstance(profile,str):
+        if isinstance(profile, str):
             return profile == level0_uri
         elif isinstance(profile, list):
             return level0_uri in profile
-        else:    
+        else:
             raise TypeError(f"Expected a string or a list for profile in the infoJson, but got {type(profile).__name__}")
 
-class InfoJson3(InfoJson):    
+
+class InfoJson3(InfoJson):
     @property
     def id(self):
         return self.data['id']
@@ -116,9 +119,9 @@ class InfoJson3(InfoJson):
     @id.setter
     def id(self, value) -> str:
         self.data['@id'] = value
-        
+
     def buildImage(self, region="full", sizeWidth=0, sizeHeight=0, rotation=0, quality="default", format="jpg"):
         return f"{self.data['id']}/{region}/{sizeWidth},{sizeHeight}/{rotation}/{quality}.{format}"
-    
+
     def isLevel0(self) -> bool:
         return self.data['profile'] == "level0"

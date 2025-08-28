@@ -1,14 +1,17 @@
-import requests
 import json
-import os
-import zipfile
 import logging
+import os
 import time
-from .processors import manifest_factory, infoJson_factory
+import zipfile
+
+import requests
 
 from iiif_archive.config import get_config
 
+from .processors import infoJson_factory, manifest_factory
+
 logger = logging.getLogger(__name__)
+
 
 def zip(source_dir, zip_filename):
     with zipfile.ZipFile(zip_filename, 'w', zipfile.ZIP_DEFLATED) as zipf:
@@ -17,6 +20,7 @@ def zip(source_dir, zip_filename):
                 file_path = os.path.join(root, file)
                 arcname = os.path.relpath(file_path, start=source_dir)
                 zipf.write(file_path, arcname)
+
 
 def saveJson(url, filename):
     # File already exists so return it
@@ -30,14 +34,15 @@ def saveJson(url, filename):
         response = requests.get(url)
 
         # Raise an error for bad responses
-        response.raise_for_status() 
+        response.raise_for_status()
 
         # Parse JSON
         data = response.json()
         with open(filename, "w") as f:
             json.dump(data, f, indent=4)
 
-        return data    
+        return data
+
 
 def downloadAsset(filename, url, retries=3):
     config = get_config()
@@ -53,7 +58,7 @@ def downloadAsset(filename, url, retries=3):
                             if chunk:  # filter out keep-alive chunks
                                 f.write(chunk)
 
-                time.sleep(config.delay)                
+                time.sleep(config.delay)
 
                 return filename
             except requests.exceptions.HTTPError as e:
@@ -62,9 +67,10 @@ def downloadAsset(filename, url, retries=3):
                     if attempt < retries:
                         time.sleep(config.retry_delay)
                         continue
-                raise e # Re-raise if not 502 or retries exhausted
+                raise e  # Re-raise if not 502 or retries exhausted
 
     return filename
+
 
 def downloadIIIF(imageDir, url):
     os.makedirs(imageDir, exist_ok=True)
@@ -78,8 +84,9 @@ def downloadIIIF(imageDir, url):
 
         try:
             downloadAsset(filename, url)
-        except requests.exceptions.HTTPError as e:    
-            print(f"Failed to get {url} skipping.")
+        except requests.exceptions.HTTPError as e:
+            print(f"Failed to get {url} due to {e.response.status_code}, skipping.")
+
 
 def download(url, zipFileName, scratch, deleteScratch=True):
     """Downloads and processes a IIIF manifest from the given URL and stores the result in a zip file.
@@ -102,7 +109,7 @@ def download(url, zipFileName, scratch, deleteScratch=True):
         dirname = os.path.basename(zipFileName).replace(".zip", "")
     else:
         dirname = os.path.basename(zipFileName)
-        zipFileName += ".zip"    
+        zipFileName += ".zip"
 
     # Config.get("locations", "scratch_dir")
     downloadDir = os.path.join(scratch, dirname)
@@ -120,12 +127,12 @@ def download(url, zipFileName, scratch, deleteScratch=True):
 
             container.url = container.filename
         else:
-            # Content is a IIIF Image 
-            downloadIIIF(os.path.join(downloadDir, container.filename), container.url)    
+            # Content is a IIIF Image
+            downloadIIIF(os.path.join(downloadDir, container.filename), container.url)
 
             container.url = container.filename
 
-    manifest.save(os.path.join(downloadDir, "manifest.json"))        
+    manifest.save(os.path.join(downloadDir, "manifest.json"))
 
     zip(downloadDir, zipFileName)
 

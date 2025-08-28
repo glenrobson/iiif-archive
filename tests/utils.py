@@ -1,19 +1,24 @@
 import json
+
 import requests
+
 
 def mockResponse(fixture):
     class MockResponse:
         status_code = 200
+
         def json(self):
             with open(fixture, "r") as file:
                 return json.load(file)
 
         def raise_for_status(self):
-            return        
+            return
 
     return MockResponse()
 
 # Your mock response class
+
+
 class MockAssetResponse:
     def __init__(self, file_path, status_code=200):
         self.file_path = file_path

@@ -1,23 +1,24 @@
+import json
 import os
-
+import tempfile
 import unittest
 from unittest.mock import patch
-import json
-import tempfile
+
+from iiif_archive.config import load_config
 from iiif_archive.downloader import download
 from iiif_archive.processors import infoJson_factory
-from tests.utils import mockResponse, MockAssetResponse
-from iiif_archive.config import get_config, load_config
+from tests.utils import MockAssetResponse, mockResponse
+
 
 class TestVersion2(unittest.TestCase):
     def setUp(self) -> None:
         # Set up config
         self.temp_dir = tempfile.TemporaryDirectory()
         self.test_path = self.temp_dir.name
-        config = load_config("tests/test-config.ini")
+        load_config("tests/test-config.ini")
 
     def tearDown(self):
-        return self.temp_dir.cleanup();    
+        return self.temp_dir.cleanup()
 
     @patch("requests.get")
     def test_simple_image(self, mockRequest):
@@ -28,7 +29,7 @@ class TestVersion2(unittest.TestCase):
             else:
                 return MockAssetResponse("tests/fixtures/assets/image.png")
 
-        mockRequest.side_effect = mock_response    
+        mockRequest.side_effect = mock_response
 
         download("https://glenrobson.github.io/iiif_stuff/simple_images/manifest2.json", "simple_image2.zip", self.test_path, deleteScratch=False)
 

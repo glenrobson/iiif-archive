@@ -1,11 +1,7 @@
 import unittest
-from unittest.mock import patch
-import json
-import tempfile
-from iiif_archive.downloader import download
-from iiif_archive.processors import infoJson_factory
-from tests.utils import mockResponse, MockAssetResponse
-from iiif_archive.config import get_config, load_config
+
+from iiif_archive.config import load_config
+
 
 class TestConfig(unittest.TestCase):
 
@@ -14,7 +10,7 @@ class TestConfig(unittest.TestCase):
 
         self.assertEqual(config.delay, 1, "Setting from defaults should be 1")
 
-    def test_fromfile(self):    
+    def test_fromfile(self):
         config = load_config("tests/test-config.ini")
 
         self.assertEqual(config.delay, 0, "Setting from test-config.ini should be 0")
@@ -31,4 +27,4 @@ class TestConfig(unittest.TestCase):
         params = {}
         config = load_config("tests/test-config.ini", params)
 
-        self.assertEqual(config.delay, 0, "Setting should be from provided properties file and equal to 0")   
+        self.assertEqual(config.delay, 0, "Setting should be from provided properties file and equal to 0")

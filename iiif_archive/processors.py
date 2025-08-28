@@ -1,12 +1,13 @@
-from typing import Dict, Any
+from typing import Any, Dict
 
-from iiif_archive.models.manifest import Manifest, Manifest2, Manifest3
-from iiif_archive.models.container import Container, Canvas2, Canvas3
+from iiif_archive.models.container import Canvas2, Canvas3, Container
 from iiif_archive.models.infoJson import InfoJson, InfoJson2, InfoJson3
+from iiif_archive.models.manifest import Manifest, Manifest2, Manifest3
+
 
 def manifest_factory(manifest: Dict[str, Any]) -> Manifest:
     contexts = manifest["@context"]
-    # Ensure contexts is an array for consistency 
+    # Ensure contexts is an array for consistency
     if isinstance(contexts, str):
         contexts = [contexts]
 
@@ -18,15 +19,16 @@ def manifest_factory(manifest: Dict[str, Any]) -> Manifest:
         raise ValueError(f"Unknown manifest version: {manifest['@context']}")
 
 
-def container_factory(container: Dict[str, Any]) -> Container:    
+def container_factory(container: Dict[str, Any]) -> Container:
     if "@type" in container:
         return Canvas2(container)
     else:
-        return Canvas3(container)    
+        return Canvas3(container)
+
 
 def infoJson_factory(data: Dict[str, Any]) -> InfoJson:
     contexts = data["@context"]
-    # Ensure contexts is an array for consistency 
+    # Ensure contexts is an array for consistency
     if isinstance(contexts, str):
         contexts = [contexts]
 
